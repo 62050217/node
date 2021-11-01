@@ -3,10 +3,18 @@
 import rospy
 from std_msgs.msg import String
 
-def main():
-    pub = rospy.Publisher('rattapong', String, queue_size=10)
-    sys.stdout.write("My name is Rattapong")
+def talker():
+    pub = rospy.Publisher('chatter', String, queue_size=10)
+    rospy.init_node('talker', anonymous=True)
     rate = rospy.Rate(5) # 5hz
-    
+    while not rospy.is_shutdown():
+        name_str = "My name is Rattapong %s" % rospy.get_time()
+        rospy.loginfo(name_str)
+        pub.publish(name_str)
+        rate.sleep()
+
 if __name__ == '__main__':
-    main()
+    try:
+        talker()
+    except rospy.ROSInterruptException:
+        pass
